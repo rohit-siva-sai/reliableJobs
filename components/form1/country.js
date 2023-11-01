@@ -28,9 +28,10 @@ const countries = [
 ];
 
 const Country = () => {
-  const [updateCountry, country] = useStore((store) => [
+  const [updateCountry, country,updateFormNo] = useStore((store) => [
     store.updateCountry,
     store.country,
+    store.updateFormNo
   ]);
 
   const [coun, setCoun] = useState(country);
