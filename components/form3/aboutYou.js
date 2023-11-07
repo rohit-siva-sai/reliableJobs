@@ -11,11 +11,23 @@ const arrayEnglish = [
   "Beginner A1/A2",
 ];
 const arrayWork = [
-  "Select...",
-  "0 - 3 Yrs Professional Experience",
-  "3 - 8 Yrs Professional Experience",
-  "8 - 12 Yrs Professional Experience",
-  "12+ Yrs Professional Experience",
+  { label: "Select...", value: "" },
+  {
+    label: "0 - 3 Yrs Professional Experience",
+    value: "0 - 3 Yrs",
+  },
+  {
+    label: "3 - 8 Yrs Professional Experience",
+    value: "3 - 8 Yrs",
+  },
+  {
+    label: "8 - 12 Yrs Professional Experience",
+    value: "8 - 12 Yrs",
+  },
+  {
+    label: "12+ Yrs Professional Experience",
+    value: "12+ Yrs",
+  },
 ];
 const arrayHear = [
   "Select...",
@@ -27,7 +39,6 @@ const arrayHear = [
   "Email",
   "In-Person Event",
   "Word of Mouth",
-
   "Referral by Andela",
   "Referral by Others",
   "Other",
@@ -58,12 +69,13 @@ const AboutYou = () => {
     <div className="flex flex-col space-y-8">
       <div className="flex flex-col space-y-4">
         <p className="text-gray-600   px-3 font-semibold">
-        English proficiency
+          English proficiency
         </p>
         <div className="relative">
           <select
             name="country"
             id=""
+            value={english}
             onChange={(e) => {
               setEnglish(e.target.value);
             }}
@@ -84,13 +96,14 @@ const AboutYou = () => {
       </div>
       <div className="flex flex-col space-y-4">
         <p className="text-gray-600   px-3 font-semibold">
-        Total years of work experience
+          Total years of work experience
         </p>
 
         <div className="relative">
           <select
             name="country"
             id=""
+            value={work}
             onChange={(e) => {
               setWork(e.target.value);
             }}
@@ -101,8 +114,8 @@ const AboutYou = () => {
           >
             {arrayWork.map((item) => {
               return (
-                <option value={item} className="">
-                  {item}
+                <option value={item.value} className="">
+                  {item.label}
                 </option>
               );
             })}
@@ -115,13 +128,14 @@ const AboutYou = () => {
       </div>
       <div className="flex flex-col space-y-4">
         <p className="text-gray-600   px-3 font-semibold">
-        How did you hear about us? (optional)
+          How did you hear about us? (optional)
         </p>
 
         <div className="relative">
           <select
             name="country"
             id=""
+            value={hear}
             onChange={(e) => {
               setHear(e.target.value);
             }}

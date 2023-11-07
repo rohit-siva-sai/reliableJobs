@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { useStore } from "@/useStore/store";
 import { useEffect } from "react";
-import { db } from "../config/firebase";
+import { db, storage } from "../config/firebase";
 import {
   getDocs,
   addDoc,
@@ -41,46 +41,109 @@ export default function App({ Component, pageProps }) {
     store.hearAboutUs,
     store.resume,
   ]);
-  console.log(
-    "username",
-    username,
-    phoneNumber,
-    email,
-    country,
-    primaryRole,
-    primarySkill,
-    skillExperience,
-    englishProficiency,
-    workExperience,
-    hearAboutUs,
-    resume
-  );
+  // console.log(
+  //   "username",
+  //   username,
+  //   phoneNumber,
+  //   email,
+  //   country,
+  //   primaryRole,
+  //   primarySkill,
+  //   skillExperience,
+  //   englishProficiency,
+  //   workExperience,
+  //   hearAboutUs,
+  //   resume
+  // );
 
   const userCollection = collection(db, "developers");
   const router = useRouter();
 
   const developerCollection = collection(db, "developers");
 
-  const submitNewUser = async () => {
-    try {
-      await setDoc(doc(developerCollection), {
+  const submitNewUser = async (e) => {
+    if (
+      !username.firstName ||
+      !username.firstName ||
+      !phoneNumber ||
+      !email ||
+      !country ||
+      !primaryRole ||
+      !primarySkill ||
+      !workExperience ||
+      !skillExperience ||
+      !resume
+    ) {
+      toast.error("Please Fill all the Details");
+      return;
+    }
+
+    // try {
+    //   await setDoc(doc(developerCollection), {
+    // username: username,
+    // email: email,
+    // phoneNumber: phoneNumber,
+    // country: country,
+    // primaryRole: primaryRole,
+    // primarySkills: primarySkill,
+    // skillExperience: skillExperience,
+    // englishProficiency: englishProficiency,
+    // workExperience: workExperience,
+    // hearAboutUs: hearAboutUs,
+    // resume: resume,
+    //   });
+
+    //   toast.success("Successfully submited");
+    // } catch (err) {
+    //   console.log(err);
+    // }
+
+    // e.preventDefault();
+    // if (!inputRef.current.value) return;
+
+    db.collection("developers")
+      .add({
         username: username,
         email: email,
         phoneNumber: phoneNumber,
         country: country,
         primaryRole: primaryRole,
-        primarySkills: primarySkill,
+        primarySkill: primarySkill,
         skillExperience: skillExperience,
         englishProficiency: englishProficiency,
         workExperience: workExperience,
         hearAboutUs: hearAboutUs,
-        resume: resume,
-      });
+        timestamp:  new Date()
+      })
+      .then((doc) => {
+        if (resume) {
+          const uploadTask = storage
+            .ref(`resumes/${doc.id}`)
+            .putString(resume, "data_url");
 
-      toast.success("Successfully submited");
-    } catch (err) {
-      console.log(err);
-    }
+          uploadTask.on(
+            "state_change",
+            null,
+            (error) => console.error(error),
+            () => {
+              storage
+                .ref(`resumes`)
+                .child(doc.id)
+                .getDownloadURL()
+                .then((url) => {
+                  db.collection("developers").doc(doc.id).set(
+                    {
+                      resume: url,
+                    },
+                    { merge: true }
+                  );
+                });
+            }
+          );
+        }
+      });
+    toast.success("Successfully submited");
+    console.log("sent");
   };
 
   return (

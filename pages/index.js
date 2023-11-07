@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import UserName from "@/components/form1/userName";
 import { useStore } from "@/useStore/store";
 import PhoenEmail from "@/components/form1/phoneEmail";
@@ -16,10 +16,58 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ submitNewUser }) {
   const router = useRouter();
-  const [updateFormNo, formNo] = useStore((store) => [
+
+  const [
+    username,
+    phoneNumber,
+    email,
+    country,
+    primaryRole,
+    primarySkill,
+    skillExperience,
+    englishProficiency,
+    workExperience,
+    hearAboutUs,
+    resume,
+    updateFormNo,
+    formNo,
+  ] = useStore((store) => [
+    store.username,
+    store.phoneNumber,
+    store.email,
+    store.country,
+    store.primaryRole,
+    store.primarySkill,
+    store.skillExperience,
+    store.englishProficiency,
+    store.workExperience,
+    store.hearAboutUs,
+    store.resume,
     store.updateFormNo,
     store.formNo,
   ]);
+
+  const [check, setCheck] = useState();
+
+  const checkFilled = () => {
+    if (
+      !username.firstName ||
+      !username.firstName ||
+      !phoneNumber ||
+      !email ||
+      !country ||
+      !primaryRole ||
+      !primarySkill ||
+      !workExperience ||
+      !skillExperience ||
+      !resume
+    ) {
+       updateFormNo(1)
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <div className={`${inter.className}`}>
@@ -51,7 +99,8 @@ export default function Home({ submitNewUser }) {
           {formNo == 1 && <Form1 />}
           {formNo == 2 && <Form2 />}
           {formNo == 3 && <Form3 submitNewUser={submitNewUser} />}
-          {formNo == 4 && <FinalPage />}
+          {formNo == 4 && checkFilled() && <FinalPage />}
+          {/* {checkFilled() && <Form1 />} */}
         </div>
       </div>
     </div>

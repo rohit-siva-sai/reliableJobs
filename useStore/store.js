@@ -2,17 +2,17 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const store = (set) => ({
-  username: { firstName: "", lastName: "" },
-  phoneNumber: "",
-  country: "",
-  email: "",
-  primaryRole: "",
-  primarySkill: "",
-  skillExperience: "",
-  workExperience: "",
-  englishProficiency: "",
-  hearAboutUs: "",
-  resume: "",
+  username: { firstName: null, lastName: null },
+  phoneNumber: null,
+  country: null,
+  email: null,
+  primaryRole: null,
+  primarySkill: null,
+  skillExperience: null,
+  workExperience: null,
+  englishProficiency: null,
+  hearAboutUs: null,
+  resume: null,
   formNo: 1,
 
   updateFormNo: async (value) => set((store) => ({ formNo: value })),

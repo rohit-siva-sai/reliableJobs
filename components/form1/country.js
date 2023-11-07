@@ -43,6 +43,7 @@ const Country = () => {
           <select
             name="country"
             id=""
+            value={coun}
             onChange={(e) => {
               setCoun(e.target.value);
             }}

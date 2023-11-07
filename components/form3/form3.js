@@ -12,7 +12,7 @@ const Form3 = ({submitNewUser}) => {
   return (
     <div className="md:px-12 pt-12 px-4 flex flex-col space-y-8">
       <AboutYou />
-      {/* <Resume/> */}
+      <Resume/>
       <div className="flex justify-center space-x-6">
         <div
           className="border-[#009661] border px-8 py-2 hover:opacity-90 text-gray-800 font-semibold cursor-pointer  rounded-full "

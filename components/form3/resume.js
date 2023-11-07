@@ -1,7 +1,7 @@
 import { storage } from "@/config/firebase";
 import { useStore } from "@/useStore/store";
 import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiLoader, FiUpload } from "react-icons/fi";
 
 const Resume = () => {
@@ -10,7 +10,10 @@ const Resume = () => {
     store.updateResume,
     store.username,
   ]);
-  const [rand,setRand] = useState(null)
+
+  const pdfRef = useRef(null);
+
+  const [rand, setRand] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fileUpload, setFileUpload] = useState(null);
 
@@ -19,6 +22,7 @@ const Resume = () => {
     uploadFile(e.target.files[0]);
   };
   const [fileList, setFileList] = useState([]);
+  const [fileList1, setFileList1] = useState([]);
 
   const uploadFile = async (file) => {
     setLoading(true);
@@ -42,10 +46,10 @@ const Resume = () => {
 
     uploadBytes(fileFolderRef, fileUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setFileList((prev) => [...prev, url]);
+        setFileList1((prev) => [...prev, url]);
       });
     });
-    setRand(Math.random())
+    setRand(Math.random());
     //   change()
     setLoading(false);
     // getFile();
@@ -53,55 +57,68 @@ const Resume = () => {
 
   const fileref = ref(storage, "resumes/");
 
-//   const getFile = () => {
-//     console.log("sasdjhdsjhv");
+  //   const getFile = () => {
+  //     console.log("sasdjhdsjhv");
 
-//     listAll(fileref).then((res) => {
-//       res.items.forEach((item) => {
-//         // console.log("item", item);
+  //     listAll(fileref).then((res) => {
+  //       res.items.forEach((item) => {
+  //         // console.log("item", item);
 
-//         getDownloadURL(item).then((url) => {
-//           setFileList((prev) => [...prev, url]);
-//           console.log('url',url);
-          
-//           updateResume(url)
-//         });
-//       });
-//     });
-//     change();
-//     console.log("sasdjhdsjhv");
-//   };
+  //         getDownloadURL(item).then((url) => {
+  //           setFileList((prev) => [...prev, url]);
+  //           console.log('url',url);
 
-    useEffect(() => {
-        console.log('random');
-        
-      listAll(fileref).then((res) => {
-        res.items.forEach((item) => {
-          // console.log("item", item);
+  //           updateResume(url)
+  //         });
+  //       });
+  //     });
+  //     change();
+  //     console.log("sasdjhdsjhv");
+  //   };
 
-          getDownloadURL(item).then((url) => {
-            updateResume(url);
-            setFileList((prev) => [...prev, url]);
-          });
-        });
-      });
-      setLoading(false);
+  // useEffect(() => {
+  //     console.log('random');
 
-    }, [rand]);
+  //   listAll(fileref).then((res) => {
+  //     res.items.forEach((item) => {
+  //       // console.log("item", item);
 
-  const change = () => {
-    console.log("chage",fileList);
+  //       getDownloadURL(item).then((url) => {
+  //         updateResume(url);
+  //         setFileList((prev) => [...prev, url]);
+  //       });
+  //     });
+  //   });
+  //   setLoading(false);
 
-    let dup = fileList;
-    dup = dup.filter((item, index) => dup.indexOf(item) === index);
-    console.log("du,dupp,dupdup", dup);
+  // }, [rand]);
 
-    // setFileList(dup);
-    updateResume(dup);
-    // setLoading(false);
+  // const change = () => {
+  //   console.log("chage",fileList);
+
+  //   let dup = fileList;
+  //   dup = dup.filter((item, index) => dup.indexOf(item) === index);
+  //   console.log("du,dupp,dupdup", dup);
+
+  //   // setFileList(dup);
+  //   updateResume(dup);
+  //   // setLoading(false);
+  // };
+  // console.log("fiel", fileUpload);
+  // console.log("filelist", fileList);
+
+  // }
+  const addResume = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+      setFileUpload(e.target.files[0])
+    }
+
+    reader.onload = (readerEvent) => {
+      updateResume(readerEvent.target.result);
+    };
   };
-  console.log("fiel", fileUpload);
-  console.log("filelist", fileList);
 
   return (
     <div>
@@ -117,30 +134,34 @@ const Resume = () => {
             <FiLoader size={22} className="text-gray-600 animate-spin " />
           )}
         </div>
-        <div className="relative">
+        <div className="relative"  >
           <div
-            className="border border-dashed cursor-pointer relative rounded-md border-green-500"
+            className="border border-dashed cursor-pointer relative rounded-md border-green-500 py-7"
             // onClick={() => {
             //   fileUpload && uploadFile(fileUpload);
             // }}
+            onClick={()=> pdfRef.current.click() }
           >
             <input
               type="file"
+              ref={pdfRef}
               name=""
               id=""
               accept="application/pdf"
-              className=" z-50 w-full border cursor-pointer opacity-0 py-3 "
-              onChange={handleChange}
+              className=" z-50 w-full border cursor-pointer opacity-0   "
+              onChange={addResume}
+              hidden
+              
             />
           </div>
-          <div className="absolute top-3 -z-10 opacity-50 left-14">
+          <div className="absolute top-4 -z-10 opacity-50 left-14">
             {!fileUpload && (
               <p className="font-medium text-gray-400 text-lg">
                 Click to add File
               </p>
             )}
             {fileUpload && (
-              <p className="font-medium  overflow-x-hidden w-full  text-gray-400 text-lg">
+              <p className="font-medium  overflow-hidden  text-ellipsis  text-gray-400 text-lg">
                 {fileUpload.name}
               </p>
             )}

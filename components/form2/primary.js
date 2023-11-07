@@ -85,6 +85,7 @@ const Primary = () => {
           <select
             name="country"
             id=""
+            value={role}
             onChange={(e) => {
               setRole(e.target.value);
             }}
@@ -112,6 +113,7 @@ const Primary = () => {
           <select
             name="country"
             id=""
+            value={skill}
             onChange={(e) => {
               setSkill(e.target.value);
             }}

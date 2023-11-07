@@ -5,7 +5,7 @@ const Uptal = () => {
   const [updateFormNo, formNo] = useStore((store) => [
     store.updateFormNo,
     store.formNo,
-  ]);
+  ]);  
   return (
     <>
       {formNo == 4 && (
@@ -13,7 +13,7 @@ const Uptal = () => {
           <img
             src="https://uptaltalent.web.app/static/media/sidebar.0728b706154dc1303798.png"
             alt=""
-            className="h-screen"
+            className=" md:block hidden  h-screen"
           />
         </picture>
       )}
